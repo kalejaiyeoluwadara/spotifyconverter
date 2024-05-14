@@ -1,0 +1,44 @@
+body{
+    overflow-x: hidden;
+
+}
+html{
+    scroll-behavior: smooth;
+}
+.bgg{
+    background-color: hsla(232, 64%, 11%, 0.842);
+   
+}
+*{
+ padding: 0px;
+ margin: 0px;
+ font-family: 'Rubik', sans-serif;
+}
+h3{
+    font-weight: 600;
+    font-size: 30px;
+}
+.bgi{
+    background-image: url('../src/assets/images/bg-dots.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: right;
+}
+.bgl{
+    background-image: url('../src/assets/images/bg-dots.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: left;
+}
+.bm{
+    display: none;
+}
+@media (max-width: 640px){
+   .sm{
+    display: none;
+   }
+   .bm{
+    display: flex;
+   }
+ 
+}
