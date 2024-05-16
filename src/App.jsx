@@ -1,9 +1,11 @@
 // export default App
 import React, { useState } from "react";
+import SpotifyLogin from "./Login";
+import Search from "./Search";
 const App = () => {
   return (
     <>
-      <h1>Hello world</h1>
+      <Search/>
     </>
   );
 };
