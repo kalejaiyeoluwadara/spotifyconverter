@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { useGlobal } from "./context";
 const CLIENT_ID = "21fa13dee5a54da78be93d4db02485b7";
 const CLIENT_SECRET = "804c5ddb54084b66817823648dd78cf7";
 
@@ -7,6 +7,7 @@ function Search() {
   const [playlistInput, setPlaylistInput] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState([]);
+  const {songs,setSongs} = useGlobal();
 
   useEffect(() => {
     const authParameters = {
@@ -25,25 +26,31 @@ function Search() {
       .catch((error) => console.error("Error fetching access token:", error));
   }, []);
 
-  const fetchPlaylist = () => {
-    const playlistId = playlistInput.split("/").pop().split("?")[0]; // Extract playlist ID from URL
-    const playlistParameters = {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    };
-
-    fetch(
-      `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
-      playlistParameters
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setPlaylistTracks(data.items);
-      })
-      .catch((error) => console.error("Error fetching playlist:", error));
+const fetchPlaylist = () => {
+  const playlistId = playlistInput.split("/").pop().split("?")[0]; // Extract playlist ID from URL
+  const playlistParameters = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   };
+
+  fetch(
+    `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+    playlistParameters
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      const newSongs = data.items.map(({ track }) => ({
+        name: track.name,
+        artists: track.artists.map((artist) => artist.name),
+      }));
+      setSongs(newSongs);
+       // Update songs state with the new array of objects
+      setPlaylistTracks(data.items);
+    })
+    .catch((error) => console.error("Error fetching playlist:", error));
+};
 
   return (
     <main className="flex h-screen flex-col w-screen justify-start">
@@ -82,6 +89,9 @@ function Search() {
             </div>
           </div>
         ))}
+        <button onClick={() =>{
+          console.log(songs);
+        }} >Log</button>
       </main>
     </main>
   );
