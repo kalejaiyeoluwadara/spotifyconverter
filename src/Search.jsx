@@ -81,11 +81,11 @@ function Search() {
         </button>
       </div>
       {/* Playlist Tracks */}
-      <main className="cards mt-4 flex w-screen sm:px-[20%] px-0 items-center justify-start flex-wrap">
+      <main className="cards mt-8 pb-20 flex w-screen sm:px-[20%] px-0 items-center justify-start flex-wrap">
         {playlistTracks.map(({ track }) => (
           <div
             key={track.id}
-            className="card w-full flex items-center justify-start h-[80px] bg-white shadow-md rounded-md m-2 p-4"
+            className="card w-full flex items-center justify-start h-[80px] bg-white shadow-md rounded-md m-2 sm:p-4 p-1 "
           >
             <img
               src={track.album.images[0]?.url}
@@ -93,8 +93,10 @@ function Search() {
               className="w-[50px] h-[50px] object-cover rounded-md"
             />
             <div className="ml-4">
-              <p className="title font-[500] text-[16px]">{track.name}</p>
-              <p className="text-gray-500 text-[14px]">
+              <p className="title font-[500] w-full overflow-hidden h-full  text-[12px] sm:text-[16px]">
+                {track.name}
+              </p>
+              <p className="text-gray-500  text-[14px]">
                 {track.artists.map((artist) => artist.name).join(", ")}
               </p>
             </div>
