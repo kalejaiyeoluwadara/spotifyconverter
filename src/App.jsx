@@ -4,7 +4,7 @@ import SpotifyLogin from "./Login";
 import Search from "./Search";
 import Youtube from "./Youtube";
 import { useGlobal } from "./context";
-import Nav from "./component/nav";
+import Nav from "./component/Nav";
 
 const App = () => {
   const {spotify,setSpotify} = useGlobal()
