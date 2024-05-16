@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
 const AppContext = React.createContext();
-import { motion, AnimatePresence } from "framer-motion";
 
 function AppProvider({ children }) {
   const [menu, setMenu] = useState(false);
