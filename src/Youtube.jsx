@@ -24,7 +24,7 @@ function Youtube() {
 
   return (
     <div className="flex flex-col items-center justify-center w-screen min-h-screen">
-      <div className="input w-screen bg-red-300 h-[100px] flex items-center justify-center py-8 ">
+      <div className="input w-screen  h-[100px] flex items-center justify-center py-8 ">
         <input
           placeholder="Search YouTube videos"
           value={searchInput}

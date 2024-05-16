@@ -3,11 +3,11 @@ const AppContext = React.createContext();
 
 function AppProvider({ children }) {
   const [menu, setMenu] = useState(false);
+  const [songs,setSongs] = useState([]);
   return (
     <AppContext.Provider
       value={{
-        menu,
-        setMenu,
+       songs,setSongs
       }}
     >
       {children}
