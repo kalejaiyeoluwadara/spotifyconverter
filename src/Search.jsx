@@ -7,7 +7,7 @@ function Search() {
   const [playlistInput, setPlaylistInput] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState([]);
-  const {songs,setSongs} = useGlobal();
+  const { songs, setSongs } = useGlobal();
 
   useEffect(() => {
     const authParameters = {
@@ -26,31 +26,42 @@ function Search() {
       .catch((error) => console.error("Error fetching access token:", error));
   }, []);
 
-const fetchPlaylist = () => {
-  const playlistId = playlistInput.split("/").pop().split("?")[0]; // Extract playlist ID from URL
-  const playlistParameters = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  };
+  const fetchPlaylist = () => {
+    const playlistId = playlistInput.split("/").pop().split("?")[0]; // Extract playlist ID from URL
+    const playlistParameters = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
 
-  fetch(
-    `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
-    playlistParameters
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      const newSongs = data.items.map(({ track }) => ({
-        name: track.name,
-        artists: track.artists.map((artist) => artist.name),
-      }));
-      setSongs(newSongs);
-       // Update songs state with the new array of objects
-      setPlaylistTracks(data.items);
-    })
-    .catch((error) => console.error("Error fetching playlist:", error));
-};
+    fetch(
+      `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+      playlistParameters
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const newSongs = data.items.map(({ track }) => ({
+          name: track.name,
+          artists: track.artists.map((artist) => artist.name),
+        }));
+
+        // Filter out songs that already exist in the songs state
+        const uniqueNewSongs = newSongs.filter((newSong) => {
+          return !songs.some((song) => {
+            return (
+              song.name === newSong.name &&
+              JSON.stringify(song.artists) === JSON.stringify(newSong.artists)
+            );
+          });
+        });
+
+        // Update songs state with unique new songs
+        setSongs((prevSongs) => [...prevSongs, ...uniqueNewSongs]);
+        setPlaylistTracks(data.items);
+      })
+      .catch((error) => console.error("Error fetching playlist:", error));
+  };
 
   return (
     <main className="flex h-screen flex-col w-screen justify-start">
@@ -89,9 +100,14 @@ const fetchPlaylist = () => {
             </div>
           </div>
         ))}
-        <button onClick={() =>{
-          console.log(songs);
-        }} >Log</button>
+        <button
+          className="fixed text-black z-40 bottom-2 right-2"
+          onClick={() => {
+            console.log(songs);
+          }}
+        >
+          Log
+        </button>
       </main>
     </main>
   );

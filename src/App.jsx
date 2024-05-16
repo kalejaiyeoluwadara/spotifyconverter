@@ -9,7 +9,7 @@ import Nav from "./component/nav";
 const App = () => {
   const {spotify,setSpotify} = useGlobal()
   return (
-    <main>
+    <main className="relative" >
       { spotify ? <Search/>:<Youtube/> }
       <Nav/>
     </main>
