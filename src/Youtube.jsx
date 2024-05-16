@@ -54,7 +54,7 @@ function Youtube() {
     
 
   return (
-    <main className="flex flex-col-reverse items-center justify-center">
+    <main className="flex flex-col-reverse w-screen items-center justify-center">
       <div className="flex flex-col items-center justify-start w-screen h-auto">
         {isLoading ? (
           <p>Loading...</p>
