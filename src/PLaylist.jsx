@@ -19,6 +19,7 @@ const YoutubePlaylistCreator = () => {
     const accessToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
     // Set the access token state
     setAccessToken(accessToken);
+    console.log(accessToken);
   };
 
   const handleLoginFailure = (response) => {

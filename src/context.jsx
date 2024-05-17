@@ -5,6 +5,7 @@ function AppProvider({ children }) {
   const [menu, setMenu] = useState(false);
   const [songs,setSongs] = useState([]);
   const [spotify,setSpotify] = useState(true)
+  const [page,setPage] = useState('');
   return (
     <AppContext.Provider
       value={{

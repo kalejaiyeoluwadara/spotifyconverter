@@ -11,8 +11,8 @@ const App = () => {
   const {spotify,setSpotify} = useGlobal()
   return (
     <main className="relative" >
-      {/* { spotify ? <Search/>:<Youtube/> }
-      <Nav/> */}
+      {/* { spotify ? <Search/>:<Youtube/> } */}
+      <Nav/>
       <YoutubePlaylistCreator/>
     </main>
   );
