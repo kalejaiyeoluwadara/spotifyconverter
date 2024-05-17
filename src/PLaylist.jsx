@@ -4,7 +4,7 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 const CLIENT_ID =
   "274611943732-5qbrec58ibrfh42l2r9rqv3j36qedr11.apps.googleusercontent.com";
-const API_KEY = "AIzaSyDeGOENcYMtKNKaAVJMYVNFn8RSkQrkJf0";
+const API_KEY = "AIzaSyDEmTTY2neJdt5GT6Y378zryQAo_j7EDvQ";
 
 const YoutubePlaylistCreator = () => {
   const [accessToken, setAccessToken] = useState(null);
@@ -14,28 +14,8 @@ const YoutubePlaylistCreator = () => {
 
   const handleLoginSuccess = (response) => {
     console.log("Login Success:", response);
-    try {
-      const token = response.credential;
-      if (!token) {
-        throw new Error("Access token not found in response");
-      }
-      const parts = token.split(".");
-      if (parts.length < 3) {
-        throw new Error("Invalid access token format");
-      }
-      const parsedToken = JSON.parse(atob(parts[1]));
-      if (!parsedToken || !parsedToken.access_token) {
-        throw new Error("Access token not found in parsed token");
-      }
-      const accessToken = parsedToken.access_token;
-      setAccessToken(accessToken);
-    } catch (error) {
-      console.error("Error parsing access token:", error);
-      setErrorMessage("Failed to authenticate");
-    }
+    setAccessToken(response.access_token);
   };
-
-
 
   const handleLoginFailure = (response) => {
     console.log("Login Failure:", response);
