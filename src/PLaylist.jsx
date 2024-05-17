@@ -24,16 +24,17 @@ const YoutubePlaylistCreator = () => {
         throw new Error("Invalid access token format");
       }
       const parsedToken = JSON.parse(atob(parts[1]));
-      const accessToken = parsedToken ? parsedToken.access_token : null;
-      if (!accessToken) {
+      if (!parsedToken || !parsedToken.access_token) {
         throw new Error("Access token not found in parsed token");
       }
+      const accessToken = parsedToken.access_token;
       setAccessToken(accessToken);
     } catch (error) {
       console.error("Error parsing access token:", error);
       setErrorMessage("Failed to authenticate");
     }
   };
+
 
 
   const handleLoginFailure = (response) => {
