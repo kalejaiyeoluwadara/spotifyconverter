@@ -4,7 +4,9 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useGlobal } from "./context"; // Import the useGlobal hook
 
 const CLIENT_ID =
-  "274611943732-5qbrec58ibrfh42l2r9rqv3j36qedr11.apps.googleusercontent.com";
+  "587491759521-7lah9r61i0pboom07j7463sdb8kb2a4k.apps.googleusercontent.com";
+  // "274611943732-5qbrec58ibrfh42l2r9rqv3j36qedr11.apps.googleusercontent.com";
+
 const API_KEY = "AIzaSyDEmTTY2neJdt5GT6Y378zryQAo_j7EDvQ";
 
 const YoutubePlaylistCreator = () => {
