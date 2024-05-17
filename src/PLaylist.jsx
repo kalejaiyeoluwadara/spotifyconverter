@@ -52,6 +52,7 @@ const YoutubePlaylistCreator = () => {
       const playlistId = response.data.id;
       setPlaylistLink(`https://www.youtube.com/playlist?list=${playlistId}`);
       setIsLoading(false);
+      console.log(playlistLink);
     } catch (error) {
       console.error("Error creating playlist:", error);
       setErrorMessage("Failed to create playlist");
