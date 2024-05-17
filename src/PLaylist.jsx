@@ -1,113 +1,21 @@
 import React, { useState } from "react";
-import axios from "axios";
-import {
-  GoogleOAuthProvider,
-  GoogleLogin,
-  useGoogleLogin,
-} from "@react-oauth/google";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 const CLIENT_ID =
-  "587491759521-jgt4asu6g2k32geeovcalb4td5p4a4ql.apps.googleusercontent.com";
-const API_KEY = "YOUR_API_KEY"; // Replace with your YouTube Data API key
+  "274611943732-5qbrec58ibrfh42l2r9rqv3j36qedr11.apps.googleusercontent.com"
 
-const YoutubePlaylistCreator = () => {
-  const [playlistLink, setPlaylistLink] = useState(null);
+const YoutubeAccessToken = () => {
+  const [accessToken, setAccessToken] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLoginSuccess = async (response) => {
-    const accessToken = response.access_token;
-
-    try {
-      const playlistResponse = await createPlaylist("My Playlist", accessToken);
-      const playlistId = playlistResponse.id;
-
-      const songTitles = ["song1", "song2", "song3"]; // Replace with your song titles
-      const videoIds = await searchYouTubeVideos(songTitles, accessToken);
-
-      await addVideosToPlaylist(playlistId, videoIds, accessToken);
-
-      setPlaylistLink(`https://www.youtube.com/playlist?list=${playlistId}`);
-    } catch (error) {
-      setErrorMessage("Failed to create playlist");
-    }
+  const handleLoginSuccess = (response) => {
+    console.log("Login Success:", response);
+    setAccessToken(response.access_token);
   };
 
   const handleLoginFailure = (response) => {
+    console.log("Login Failure:", response);
     setErrorMessage("Failed to authenticate");
-  };
-
-  const searchYouTubeVideos = async (songTitles, accessToken) => {
-    const videoIds = [];
-    for (const title of songTitles) {
-      const response = await axios.get(
-        "https://www.googleapis.com/youtube/v3/search",
-        {
-          params: {
-            part: "snippet",
-            q: title,
-            type: "video",
-            key: API_KEY,
-            access_token: accessToken,
-          },
-        }
-      );
-      if (response.data.items.length > 0) {
-        videoIds.push(response.data.items[0].id.videoId);
-      }
-    }
-    return videoIds;
-  };
-
-  const createPlaylist = async (title, accessToken) => {
-    try {
-      const response = await axios.post(
-        "https://www.googleapis.com/youtube/v3/playlists",
-        {
-          snippet: {
-            title: title,
-          },
-          status: {
-            privacyStatus: "public",
-          },
-        },
-        {
-          params: {
-            part: "snippet,status",
-            key: API_KEY,
-            access_token: accessToken,
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error creating playlist:", error);
-      throw error;
-    }
-  };
-
-  const addVideosToPlaylist = async (playlistId, videoIds, accessToken) => {
-    for (const videoId of videoIds) {
-      await axios.post(
-        "https://www.googleapis.com/youtube/v3/playlistItems",
-        {
-          snippet: {
-            playlistId: playlistId,
-            resourceId: {
-              kind: "youtube#video",
-              videoId: videoId,
-            },
-          },
-        },
-        {
-          params: {
-            part: "snippet",
-            key: API_KEY,
-            access_token: accessToken,
-          },
-        }
-      );
-    }
   };
 
   return (
@@ -117,19 +25,16 @@ const YoutubePlaylistCreator = () => {
           onSuccess={handleLoginSuccess}
           onFailure={handleLoginFailure}
         />
-        {isLoading && <p>Loading...</p>}
-        {errorMessage && <p>{errorMessage}</p>}
-        {playlistLink && (
+        {accessToken && (
           <div className="mt-4">
-            <p>Playlist Link:</p>
-            <a href={playlistLink} target="_blank" rel="noopener noreferrer">
-              {playlistLink}
-            </a>
+            <p>Access Token:</p>
+            <code>{accessToken}</code>
           </div>
         )}
+        {errorMessage && <p>{errorMessage}</p>}
       </div>
     </GoogleOAuthProvider>
   );
 };
 
-export default YoutubePlaylistCreator;
+export default YoutubeAccessToken;
