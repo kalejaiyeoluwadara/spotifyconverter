@@ -37,7 +37,7 @@ function Playlist() {
   }, []);
 
   return (
-    <main className="flex flex-col w-screen sm:px-0 px-4 overflow-hidden items-center justify-center">
+    <main className="flex flex-col w-screen sm:px-8 px-4 overflow-hidden items-center justify-center">
       <div className="w-full h-auto">
         {isLoading ? (
           <p>Loading...</p>
