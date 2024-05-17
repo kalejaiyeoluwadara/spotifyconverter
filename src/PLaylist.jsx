@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useGlobal } from "./context"; // Import the useGlobal hook
-import jwt_decode from "jwt-decode";
+
 const CLIENT_ID =
   "587491759521-7lah9r61i0pboom07j7463sdb8kb2a4k.apps.googleusercontent.com";
 const API_KEY = "AIzaSyDEmTTY2neJdt5GT6Y378zryQAo_j7EDvQ";
@@ -14,39 +14,22 @@ const YoutubePlaylistCreator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { songs } = useGlobal(); // Access the songs state from useGlobal hook
 
-  // const handleLoginSuccess = (response) => {
-  //   console.log("Login Success:", response);
-  //   const token = response.credential;
-  //   const decodedToken = JSON.parse(atob(token.split(".")[1]));
-  //   // Check if the token includes the required scope
-  //   if (
-  //     decodedToken &&
-  //     decodedToken.scope &&
-  //     decodedToken.scope.includes("https://www.googleapis.com/auth/youtube")
-  //   ) {
-  //     const accessToken = token;
-  //     setAccessToken(accessToken);
-  //   } else {
-  //     setErrorMessage("Access token does not have the required YouTube scope");
-  //   }
-  // };
   const handleLoginSuccess = (response) => {
     console.log("Login Success:", response);
     const token = response.credential;
-    const decodedToken = jwt_decode(token);
-
+    const decodedToken = JSON.parse(atob(token.split(".")[1]));
     // Check if the token includes the required scope
     if (
       decodedToken &&
       decodedToken.scope &&
       decodedToken.scope.includes("https://www.googleapis.com/auth/youtube")
     ) {
-      setAccessToken(token);
+      const accessToken = token;
+      setAccessToken(accessToken);
     } else {
       setErrorMessage("Access token does not have the required YouTube scope");
     }
   };
-
 
   const handleLoginFailure = (response) => {
     console.log("Login Failure:", response);
