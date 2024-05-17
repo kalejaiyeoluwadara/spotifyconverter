@@ -5,7 +5,7 @@ import { useGlobal } from "./context"; // Import the useGlobal hook
 
 const CLIENT_ID =
   "274611943732-5qbrec58ibrfh42l2r9rqv3j36qedr11.apps.googleusercontent.com";
-const API_KEY = "AIzaSyDeGOENcYMtKNKaAVJMYVNFn8RSkQrkJf0";
+const API_KEY = "YOUR_YOUTUBE_API_KEY";
 
 const YoutubePlaylistCreator = () => {
   const [accessToken, setAccessToken] = useState(null);
@@ -14,15 +14,14 @@ const YoutubePlaylistCreator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { songs } = useGlobal(); // Access the songs state from useGlobal hook
 
-
-    const handleLoginSuccess = (response) => {
-      console.log("Login Success:", response);
-      const token = response.credential;
-      // Extract access token from the credential field
-      const accessToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
-      // Set the access token state
-      setAccessToken(accessToken);
-    };
+  const handleLoginSuccess = (response) => {
+    console.log("Login Success:", response);
+    const token = response.credential;
+    // Extract access token from the credential field
+    const accessToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
+    // Set the access token state
+    setAccessToken(accessToken);
+  };
 
   const handleLoginFailure = (response) => {
     console.log("Login Failure:", response);
@@ -60,8 +59,8 @@ const YoutubePlaylistCreator = () => {
       const playlistId = playlistResponse.data.id;
 
       // Add videos to the playlist
-      const videoIds = await searchYouTubeVideos(songTitles);
-      await addVideosToPlaylist(playlistId, videoIds);
+      const videoIds = await searchYouTubeVideos(songTitles, accessToken);
+      await addVideosToPlaylist(playlistId, videoIds, accessToken);
 
       setPlaylistLink(`https://www.youtube.com/playlist?list=${playlistId}`);
       setIsLoading(false);
@@ -73,7 +72,7 @@ const YoutubePlaylistCreator = () => {
     }
   };
 
-  const searchYouTubeVideos = async (songTitles) => {
+  const searchYouTubeVideos = async (songTitles, accessToken) => {
     const videoIds = [];
     for (const title of songTitles) {
       const response = await axios.get(
@@ -95,7 +94,7 @@ const YoutubePlaylistCreator = () => {
     return videoIds;
   };
 
-  const addVideosToPlaylist = async (playlistId, videoIds) => {
+  const addVideosToPlaylist = async (playlistId, videoIds, accessToken) => {
     for (const videoId of videoIds) {
       await axios.post(
         "https://www.googleapis.com/youtube/v3/playlistItems",
@@ -133,12 +132,14 @@ const YoutubePlaylistCreator = () => {
           onFailure={handleLoginFailure}
         />
         {isLoading && <p>Loading...</p>}
+        {accessToken && (
           <button
             onClick={fetchVideos}
             className="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
           >
             Create Playlist
           </button>
+        )}
         {playlistLink && (
           <div className="mt-4">
             <p>Playlist Link:</p>
