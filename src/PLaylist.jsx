@@ -4,7 +4,7 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useGlobal } from "./context"; // Import the useGlobal hook
 
 const CLIENT_ID =
-  "587491759521-7lah9r61i0pboom07j7463sdb8kb2a4k.apps.googleusercontent.com";
+  "274611943732-5qbrec58ibrfh42l2r9rqv3j36qedr11.apps.googleusercontent.com";
 const API_KEY = "AIzaSyDEmTTY2neJdt5GT6Y378zryQAo_j7EDvQ";
 
 const YoutubePlaylistCreator = () => {
@@ -17,10 +17,18 @@ const YoutubePlaylistCreator = () => {
   const handleLoginSuccess = (response) => {
     console.log("Login Success:", response);
     const token = response.credential;
-    // Extract access token from the credential field
-    const accessToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
-    // Set the access token state
-    setAccessToken(accessToken);
+    const decodedToken = JSON.parse(atob(token.split(".")[1]));
+    // Check if the token includes the required scope
+    if (
+      decodedToken &&
+      decodedToken.scope &&
+      decodedToken.scope.includes("https://www.googleapis.com/auth/youtube")
+    ) {
+      const accessToken = token;
+      setAccessToken(accessToken);
+    } else {
+      setErrorMessage("Access token does not have the required YouTube scope");
+    }
   };
 
   const handleLoginFailure = (response) => {
@@ -51,7 +59,9 @@ const YoutubePlaylistCreator = () => {
           params: {
             part: "snippet,status",
             key: API_KEY,
-            access_token: accessToken,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -59,8 +69,8 @@ const YoutubePlaylistCreator = () => {
       const playlistId = playlistResponse.data.id;
 
       // Add videos to the playlist
-      const videoIds = await searchYouTubeVideos(songTitles, accessToken);
-      await addVideosToPlaylist(playlistId, videoIds, accessToken);
+      const videoIds = await searchYouTubeVideos(songTitles);
+      await addVideosToPlaylist(playlistId, videoIds);
 
       setPlaylistLink(`https://www.youtube.com/playlist?list=${playlistId}`);
       setIsLoading(false);
@@ -72,7 +82,7 @@ const YoutubePlaylistCreator = () => {
     }
   };
 
-  const searchYouTubeVideos = async (songTitles, accessToken) => {
+  const searchYouTubeVideos = async (songTitles) => {
     const videoIds = [];
     for (const title of songTitles) {
       const response = await axios.get(
@@ -83,7 +93,9 @@ const YoutubePlaylistCreator = () => {
             q: title,
             type: "video",
             key: API_KEY,
-            access_token: accessToken,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -94,7 +106,7 @@ const YoutubePlaylistCreator = () => {
     return videoIds;
   };
 
-  const addVideosToPlaylist = async (playlistId, videoIds, accessToken) => {
+  const addVideosToPlaylist = async (playlistId, videoIds) => {
     for (const videoId of videoIds) {
       await axios.post(
         "https://www.googleapis.com/youtube/v3/playlistItems",
@@ -111,7 +123,9 @@ const YoutubePlaylistCreator = () => {
           params: {
             part: "snippet",
             key: API_KEY,
-            access_token: accessToken,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -130,16 +144,15 @@ const YoutubePlaylistCreator = () => {
         <GoogleLogin
           onSuccess={handleLoginSuccess}
           onFailure={handleLoginFailure}
+          scope="https://www.googleapis.com/auth/youtube"
         />
         {isLoading && <p>Loading...</p>}
-        {accessToken && (
-          <button
-            onClick={fetchVideos}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
-          >
-            Create Playlist
-          </button>
-        )}
+        <button
+          onClick={fetchVideos}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+        >
+          Create Playlist
+        </button>
         {playlistLink && (
           <div className="mt-4">
             <p>Playlist Link:</p>
