@@ -106,6 +106,12 @@ function Search() {
           {errorMessage}
         </div>
       )}
+      {/* Prompt Message */}
+      {playlistTracks.length === 0 && !isLoading && !errorMessage && (
+        <div className="w-full sm:px-0 px-4 flex items-center justify-center text-gray-500">
+          Please enter a Spotify playlist link to fetch tracks.
+        </div>
+      )}
       {/* Playlist Tracks */}
       <main className="cards mt-8 pb-20 flex w-screen sm:px-[20%] px-0 items-center justify-start flex-wrap">
         {playlistTracks.map(({ track }) => (
