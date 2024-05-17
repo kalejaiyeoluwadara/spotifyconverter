@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useGlobal } from "./context";
 
 const CLIENT_ID =
   "274611943732-5qbrec58ibrfh42l2r9rqv3j36qedr11.apps.googleusercontent.com";
-const API_KEY = "YOUR_YOUTUBE_API_KEY";
+const API_KEY = "AIzaSyDeGOENcYMtKNKaAVJMYVNFn8RSkQrkJf0";
+const ACCESS_TOKEN_KEY = "youtube_access_token";
 
 const YoutubePlaylistCreator = () => {
   const [accessToken, setAccessToken] = useState(null);
@@ -14,13 +15,25 @@ const YoutubePlaylistCreator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { songs } = useGlobal();
 
+  useEffect(() => {
+    const storedAccessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+    if (storedAccessToken) {
+      setAccessToken(storedAccessToken);
+    }
+  }, []);
+
+  const saveAccessToken = (token) => {
+    localStorage.setItem(ACCESS_TOKEN_KEY, token);
+    setAccessToken(token);
+  };
+
   const handleLoginSuccess = (response) => {
     console.log("Login Success:", response);
     const token = response.credential;
     const accessToken = token
       ? JSON.parse(atob(token.split(".")[1])).access_token
       : null;
-    setAccessToken(accessToken);
+    saveAccessToken(accessToken);
   };
 
   const handleLoginFailure = (response) => {
@@ -122,28 +135,35 @@ const YoutubePlaylistCreator = () => {
   return (
     <GoogleOAuthProvider clientId={CLIENT_ID}>
       <div className="flex flex-col items-center justify-center h-screen">
-        <GoogleLogin
-          onSuccess={handleLoginSuccess}
-          onFailure={handleLoginFailure}
-        />
+        {accessToken ? (
+          <>
+            <button
+              onClick={fetchVideos}
+              className="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+            >
+              Create Playlist
+            </button>
+            {playlistLink && (
+              <div className="mt-4">
+                <p>Playlist Link:</p>
+                <a
+                  href={playlistLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {playlistLink}
+                </a>
+              </div>
+            )}
+            {errorMessage && <p>{errorMessage}</p>}
+          </>
+        ) : (
+          <GoogleLogin
+            onSuccess={handleLoginSuccess}
+            onFailure={handleLoginFailure}
+          />
+        )}
         {isLoading && <p>Loading...</p>}
-        {accessToken && (
-          <button
-            onClick={fetchVideos}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
-          >
-            Create Playlist
-          </button>
-        )}
-        {playlistLink && (
-          <div className="mt-4">
-            <p>Playlist Link:</p>
-            <a href={playlistLink} target="_blank" rel="noopener noreferrer">
-              {playlistLink}
-            </a>
-          </div>
-        )}
-        {errorMessage && <p>{errorMessage}</p>}
       </div>
     </GoogleOAuthProvider>
   );
