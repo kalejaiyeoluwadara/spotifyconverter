@@ -5,7 +5,7 @@ import { useGlobal } from "./context"; // Import the useGlobal hook
 
 const CLIENT_ID =
   "274611943732-5qbrec58ibrfh42l2r9rqv3j36qedr11.apps.googleusercontent.com";
-const API_KEY = "YOUR_YOUTUBE_API_KEY";
+const API_KEY = "AIzaSyDEmTTY2neJdt5GT6Y378zryQAo_j7EDvQ";
 
 const YoutubePlaylistCreator = () => {
   const [accessToken, setAccessToken] = useState(null);
