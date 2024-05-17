@@ -37,22 +37,28 @@ function Playlist() {
   }, []);
 
   return (
-    <main className="flex text-black relative w-screen sm:px-8 px-4 overflow-hidden items-center justify-center">
-      <div className="h-screen fixed top-0 left-0 shadow-md px-8 py-8 ">
-        <div className="text-lg font-bold mb-10 " >
+    <main className="flex text-white bg-black sm:px-0 px-8 relative w-screen  items-start justify-start">
+      <div className="h-screen sm:visible invisible sm:block hidden bg-[#121212] mr-4 w-auto shadow-sm px-8 py-8 ">
+        <div className="text-lg font-bold mb-6 ">
           <p>Playlists</p>
         </div>
-        <div className="flex flex-col gap-1 text-[12px] font-semibold">
-          {
-            playlists.map((play) =>{
-                return(
-                    <p key={play.id} className="py-2  w-[30px] overflow-hidden height-[10px] rounded-md shadow-sm " >{play.title}</p>
-                )
-            })
-          }
+        <div className="flex flex-col gap-1 text-[14px] font-semibold">
+          <p className="py-2 px-4  w-auto overflow-hidden  text-ellipsis rounded-md shadow-sm ">
+            All
+          </p>
+          {playlists.map((play) => {
+            return (
+              <p
+                key={play.id}
+                className="py-2 px-4  w-auto overflow-hidden  text-ellipsis rounded-md shadow-sm "
+              >
+                {play.title}
+              </p>
+            );
+          })}
         </div>
       </div>
-      <div className="w-full sm:ml-40 h-auto">
+      <div className="w-full h-full overflow-y-scroll flex items-center justify-center">
         {isLoading ? (
           <p>Loading...</p>
         ) : errorMessage ? (
@@ -62,24 +68,26 @@ function Playlist() {
             {playlists.length > 0 ? (
               playlists.map((playlist) => (
                 <div key={playlist.id} className="mb-8 w-full">
-                  <h2 className="text-2xl font-bold mb-4">{playlist.title}</h2>
+                  <h2 className="text-[22px] font-bold mb-4">
+                    {playlist.title}
+                  </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {playlist.videos.map((video, index) => (
                       <div
                         key={index}
-                        className="flex  flex-col items-center mb-4"
+                        className="flex bg-[#121212] overflow-hidden rounded-[20px] flex-col items-center mb-4 pb-4 "
                       >
                         <img
                           src={video.thumbnailUrl}
                           alt={video.title}
                           className="w-full h-auto mb-2"
                         />
-                        <div className="text-center">
-                          <h2 className="text-sm font-semibold">
+                        <div className="text-start px-2 ">
+                          <h2 className="text-[18px] font-semibold">
                             {video.title}
                           </h2>
                           <button
-                            className="mt-2 px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                            className="mt-2 text-white font-semibold rounded-md   "
                             onClick={() =>
                               window.open(
                                 `https://www.youtube.com/watch?v=${video.videoId}`,
@@ -87,7 +95,7 @@ function Playlist() {
                               )
                             }
                           >
-                            Visit
+                            {"Visit >"}
                           </button>
                         </div>
                       </div>
@@ -96,7 +104,9 @@ function Playlist() {
                 </div>
               ))
             ) : (
-              <p>No playlists found in the Firestore.</p>
+              <div className="h-full bg-red-200 w-full flex items-center justify-center">
+                <p>No playlists found in the Firestore.</p>
+              </div>
             )}
           </div>
         )}

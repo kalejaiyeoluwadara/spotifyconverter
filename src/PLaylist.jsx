@@ -163,7 +163,7 @@ const YoutubePlaylistCreator = () => {
 
   return (
     <GoogleOAuthProvider clientId={CLIENT_ID}>
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col bg-black text-white items-center justify-center h-screen">
         <GoogleLogin
           onSuccess={handleLoginSuccess}
           onFailure={handleLoginFailure}

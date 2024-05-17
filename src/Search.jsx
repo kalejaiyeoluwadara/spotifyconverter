@@ -83,18 +83,18 @@ function Search() {
   };
 
   return (
-    <main className="flex h-screen flex-col w-screen justify-start">
+    <main className="flex h-screen bg-black text-white flex-col w-screen justify-start">
       <div className="w-full sm:px-0 px-4  flex sm:flex-row flex-col items-center py-8 h-[100px] justify-center">
         <input
           placeholder="Enter playlist link"
           value={playlistInput}
           onChange={(e) => setPlaylistInput(e.target.value)}
           type="text"
-          className="p-2 border sm:mt-0 mt-4 border-gray-300 rounded-md"
+          className="py-2 px-3 border sm:w-[60%] w-[90%]  sm:mt-0 mt-20 border-gray-300 rounded-[20px]"
         />
         <button
           onClick={fetchPlaylist}
-          className="ml-4 px-4 py-2 sm:mt-0 mt-2 bg-green-500 text-white font-semibold rounded-md shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
+          className="ml-4 px-4 py-2 sm:mt-0 mt-6 bg-green-500 text-white font-semibold rounded-md shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
           disabled={isLoading}
         >
           {isLoading ? "Loading..." : "Get Playlist"}
@@ -102,13 +102,13 @@ function Search() {
       </div>
       {/* Error Message */}
       {errorMessage && (
-        <div className="w-full sm:px-0 px-4 flex items-center justify-center text-red-500">
+        <div className="w-full sm:px-0 px-4 sm:h-full h-full flex items-center justify-center text-red-500">
           {errorMessage}
         </div>
       )}
       {/* Prompt Message */}
       {playlistTracks.length === 0 && !isLoading && !errorMessage && (
-        <div className="w-full sm:px-0 px-4 flex items-center justify-center text-gray-500">
+        <div className="w-full sm:h-full h-full sm:px-0 px-4 flex items-center justify-center text-gray-500">
           Please enter a Spotify playlist link to fetch tracks.
         </div>
       )}

@@ -79,7 +79,7 @@ function Youtube() {
   };
 
   return (
-    <main className="flex flex-col-reverse w-screen overflow-hidden items-center justify-center">
+    <main className="flex flex-col-reverse w-screen min-h-screen bg-black relative overflow-hidden items-center justify-center">
       <div className="flex flex-col items-center justify-start w-full h-auto">
         {isLoading ? (
           <p>Loading...</p>
@@ -139,14 +139,14 @@ function Youtube() {
           </p>
         </div>
       )}
-      <div className="w-full flex items-center justify-center">
+     { videos.length < 1 && <div className="w-full h-full fixed bottom-20 z-50 flex items-center justify-center">
         <button
           className="ml-4 mt-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-md shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
           onClick={fetchVideos}
         >
           Fetch songs from YouTube
         </button>
-      </div>
+      </div>}
     </main>
   );
 }

@@ -4,12 +4,12 @@ import { useGlobal } from '../context'
 function Nav() {
     const {spotify,setSpotify,setPage,page} = useGlobal()
   return (
-    <div className="flex w-screen  gap-8 h-[50px] bg-white fixed z-50 bottom-0 left-0 rounded-md shadow-sm items-center justify-center ">
+    <div className="flex w-screen  gap-8 h-[60px] bg-[#121212] fixed z-50 bottom-0 left-0 rounded-md shadow-sm items-center justify-center ">
       <section
         className={`${
           page === "spotify"
             ? "text-green-500 font-[500]  "
-            : "text-black font-[400] cursor-pointer "
+            : "text-white font-[400] cursor-pointer "
         }`}
         onClick={() => {
           setPage("spotify");
@@ -21,7 +21,7 @@ function Nav() {
         className={`${
           page === "youtube"
             ? "text-red-500 font-[500]  "
-            : "text-black font-[400] cursor-pointer "
+            : "text-white font-[400] cursor-pointer "
         }`}
         onClick={() => {
           setPage("youtube");
@@ -33,7 +33,7 @@ function Nav() {
         className={`${
           page === "playlist"
             ? "text-blue-500 font-[500]  "
-            : "text-black font-[400] cursor-pointer "
+            : "text-white font-[400] cursor-pointer "
         }`}
         onClick={() => {
           setPage("playlist");
@@ -45,7 +45,7 @@ function Nav() {
         className={`${
           page === "login"
             ? "text-blue-500 font-[500]  "
-            : "text-black font-[400] cursor-pointer "
+            : "text-white font-[400] cursor-pointer "
         }`}
         onClick={() => {
           setPage("login");
