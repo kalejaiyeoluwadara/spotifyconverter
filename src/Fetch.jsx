@@ -58,7 +58,7 @@ function Playlist() {
           })}
         </div>
       </div>
-      <div className="w-full h-full overflow-y-scroll flex items-center justify-center">
+      <div className="w-full h-screen overflow-y-scroll flex items-center justify-center">
         {isLoading ? (
           <p>Loading...</p>
         ) : errorMessage ? (
