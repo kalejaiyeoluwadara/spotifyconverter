@@ -14,14 +14,15 @@ const YoutubePlaylistCreator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { songs } = useGlobal(); // Access the songs state from useGlobal hook
 
-  const handleLoginSuccess = (response) => {
-    console.log("Login Success:", response);
-    const token = response.credential;
-    const accessToken = token
-      ? JSON.parse(atob(token.split(".")[1])).access_token
-      : null;
-    setAccessToken(accessToken);
-  };
+
+    const handleLoginSuccess = (response) => {
+      console.log("Login Success:", response);
+      const token = response.credential;
+      // Extract access token from the credential field
+      const accessToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
+      // Set the access token state
+      setAccessToken(accessToken);
+    };
 
   const handleLoginFailure = (response) => {
     console.log("Login Failure:", response);
