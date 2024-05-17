@@ -2,35 +2,41 @@ import React from 'react'
 import { useGlobal } from '../context'
 
 function Nav() {
-    const {spotify,setSpotify} = useGlobal()
+    const {spotify,setSpotify,setPage,page} = useGlobal()
   return (
     <div className="flex w-screen  gap-8 h-[50px] bg-white fixed z-50 bottom-0 left-0 rounded-md shadow-sm items-center justify-center ">
       <section
         className={`${
-          spotify ? "text-green-500 font-[500] " : "text-black font-[400] "
+          page === "spotify"
+            ? "text-green-500 font-[500]  "
+            : "text-black font-[400] cursor-pointer "
         }`}
         onClick={() => {
-          setSpotify(true);
+          setPage("spotify");
         }}
       >
         Spotify
       </section>
       <section
         className={`${
-          !spotify ? "text-red-500 font-[500] " : "text-black font-[400] "
+          page === "youtube"
+            ? "text-red-500 font-[500]  "
+            : "text-black font-[400] cursor-pointer "
         }`}
         onClick={() => {
-          setSpotify(false);
+          setPage("youtube");
         }}
       >
         Youtube
       </section>
       <section
         className={`${
-          !spotify ? "text-red-500 font-[500] " : "text-black font-[400] "
+          page === "login"
+            ? "text-blue-500 font-[500]  "
+            : "text-black font-[400] cursor-pointer "
         }`}
         onClick={() => {
-          setSpotify(false);
+          setPage("login");
         }}
       >
         Login

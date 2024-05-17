@@ -8,12 +8,13 @@ import Nav from "./component/Nav";
 import YoutubePlaylistCreator from "./PLaylist";
 
 const App = () => {
-  const {spotify,setSpotify} = useGlobal()
+  const {spotify,setSpotify,page} = useGlobal()
   return (
-    <main className="relative" >
-      {/* { spotify ? <Search/>:<Youtube/> } */}
-      <Nav/>
-      <YoutubePlaylistCreator/>
+    <main className="relative">
+      {page === "spotify" && <Search />}
+      {page === "youtube" && <Youtube />}
+      {page === "login" && <YoutubePlaylistCreator />}
+      <Nav />
     </main>
   );
 };

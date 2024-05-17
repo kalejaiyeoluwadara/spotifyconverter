@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-
+import { useGlobal } from "./context";
 const CLIENT_ID =
   "274611943732-5qbrec58ibrfh42l2r9rqv3j36qedr11.apps.googleusercontent.com";
 const API_KEY = "AIzaSyDEmTTY2neJdt5GT6Y378zryQAo_j7EDvQ";
 
 const YoutubePlaylistCreator = () => {
-  const [accessToken, setAccessToken] = useState(null);
+  const [accessToken, setAccessToken] = useState();
   const [playlistLink, setPlaylistLink] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const { songs } = useGlobal();
   const handleLoginSuccess = (response) => {
     console.log("Login Success:", response);
     const token = response.credential;
