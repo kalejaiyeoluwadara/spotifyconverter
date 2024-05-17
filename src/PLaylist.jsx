@@ -2,24 +2,25 @@ import React, { useState } from "react";
 import axios from "axios";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useGlobal } from "./context";
+
 const CLIENT_ID =
   "274611943732-5qbrec58ibrfh42l2r9rqv3j36qedr11.apps.googleusercontent.com";
-const API_KEY = "AIzaSyDEmTTY2neJdt5GT6Y378zryQAo_j7EDvQ";
+const API_KEY = "YOUR_YOUTUBE_API_KEY";
 
 const YoutubePlaylistCreator = () => {
-  const [accessToken, setAccessToken] = useState();
+  const [accessToken, setAccessToken] = useState(null);
   const [playlistLink, setPlaylistLink] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { songs } = useGlobal();
+
   const handleLoginSuccess = (response) => {
     console.log("Login Success:", response);
     const token = response.credential;
-    // Extract access token from the credential field
-    const accessToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
-    // Set the access token state
+    const accessToken = token
+      ? JSON.parse(atob(token.split(".")[1])).access_token
+      : null;
     setAccessToken(accessToken);
-    console.log(accessToken);
   };
 
   const handleLoginFailure = (response) => {
@@ -27,7 +28,7 @@ const YoutubePlaylistCreator = () => {
     setErrorMessage("Failed to authenticate");
   };
 
-  const createPlaylist = async (title) => {
+  const createPlaylist = async (title, songTitles) => {
     if (!accessToken) {
       setErrorMessage("No access token available");
       return;
@@ -35,7 +36,8 @@ const YoutubePlaylistCreator = () => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post(
+      const videoIds = await searchYouTubeVideos(songTitles);
+      const playlistResponse = await axios.post(
         "https://www.googleapis.com/youtube/v3/playlists",
         {
           snippet: {
@@ -54,15 +56,67 @@ const YoutubePlaylistCreator = () => {
         }
       );
 
-      const playlistId = response.data.id;
+      const playlistId = playlistResponse.data.id;
+      await addVideosToPlaylist(playlistId, videoIds);
       setPlaylistLink(`https://www.youtube.com/playlist?list=${playlistId}`);
       setIsLoading(false);
-      console.log(playlistLink);
     } catch (error) {
       console.error("Error creating playlist:", error);
       setErrorMessage("Failed to create playlist");
       setIsLoading(false);
     }
+  };
+
+  const searchYouTubeVideos = async (songTitles) => {
+    const videoIds = [];
+    for (const title of songTitles) {
+      const response = await axios.get(
+        "https://www.googleapis.com/youtube/v3/search",
+        {
+          params: {
+            part: "snippet",
+            q: title,
+            type: "video",
+            key: API_KEY,
+            access_token: accessToken,
+          },
+        }
+      );
+      if (response.data.items.length > 0) {
+        videoIds.push(response.data.items[0].id.videoId);
+      }
+    }
+    return videoIds;
+  };
+
+  const addVideosToPlaylist = async (playlistId, videoIds) => {
+    for (const videoId of videoIds) {
+      await axios.post(
+        "https://www.googleapis.com/youtube/v3/playlistItems",
+        {
+          snippet: {
+            playlistId: playlistId,
+            resourceId: {
+              kind: "youtube#video",
+              videoId: videoId,
+            },
+          },
+        },
+        {
+          params: {
+            part: "snippet",
+            key: API_KEY,
+            access_token: accessToken,
+          },
+        }
+      );
+    }
+  };
+
+  const fetchVideos = async () => {
+    const limitedSongs = songs.slice(0, 3); // Get the first 3 songs
+    const songTitles = limitedSongs.map((song) => song.name);
+    await createPlaylist("My Playlist", songTitles);
   };
 
   return (
@@ -75,7 +129,7 @@ const YoutubePlaylistCreator = () => {
         {isLoading && <p>Loading...</p>}
         {accessToken && (
           <button
-            onClick={() => createPlaylist("My Playlist")}
+            onClick={fetchVideos}
             className="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
           >
             Create Playlist
