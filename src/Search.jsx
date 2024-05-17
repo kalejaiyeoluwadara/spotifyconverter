@@ -7,6 +7,8 @@ function Search() {
   const [playlistInput, setPlaylistInput] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const { songs, setSongs } = useGlobal();
 
   useEffect(() => {
@@ -23,10 +25,16 @@ function Search() {
       .then((data) => {
         setAccessToken(data.access_token);
       })
-      .catch((error) => console.error("Error fetching access token:", error));
+      .catch((error) => {
+        console.error("Error fetching access token:", error);
+        setErrorMessage("Failed to fetch access token.");
+      });
   }, []);
 
   const fetchPlaylist = () => {
+    setIsLoading(true);
+    setErrorMessage("");
+
     const playlistId = playlistInput.split("/").pop().split("?")[0]; // Extract playlist ID from URL
     const playlistParameters = {
       method: "GET",
@@ -41,6 +49,10 @@ function Search() {
     )
       .then((response) => response.json())
       .then((data) => {
+        if (data.error) {
+          throw new Error(data.error.message);
+        }
+
         const newSongs = data.items.map(({ track }) => ({
           name: track.name,
           artists: track.artists.map((artist) => artist.name),
@@ -59,8 +71,15 @@ function Search() {
         // Update songs state with unique new songs
         setSongs((prevSongs) => [...prevSongs, ...uniqueNewSongs]);
         setPlaylistTracks(data.items);
+        setIsLoading(false);
       })
-      .catch((error) => console.error("Error fetching playlist:", error));
+      .catch((error) => {
+        console.error("Error fetching playlist:", error);
+        setErrorMessage(
+          "Failed to fetch playlist. Please check the playlist link and try again."
+        );
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -76,10 +95,17 @@ function Search() {
         <button
           onClick={fetchPlaylist}
           className="ml-4 px-4 py-2 sm:mt-0 mt-2 bg-green-500 text-white font-semibold rounded-md shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
+          disabled={isLoading}
         >
-          Get Playlist
+          {isLoading ? "Loading..." : "Get Playlist"}
         </button>
       </div>
+      {/* Error Message */}
+      {errorMessage && (
+        <div className="w-full sm:px-0 px-4 flex items-center justify-center text-red-500">
+          {errorMessage}
+        </div>
+      )}
       {/* Playlist Tracks */}
       <main className="cards mt-8 pb-20 flex w-screen sm:px-[20%] px-0 items-center justify-start flex-wrap">
         {playlistTracks.map(({ track }) => (

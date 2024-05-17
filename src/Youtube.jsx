@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import youtube from "./api/youtube"; // assuming the axios instance file is named youtube.js
 import { useGlobal } from "./context";
 import { collection, addDoc } from "firebase/firestore";
@@ -8,9 +8,12 @@ function Youtube() {
   const [videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [playlistCreated, setPlaylistCreated] = useState(false);
+  const [isAddingToPlaylist, setIsAddingToPlaylist] = useState(false);
   const { songs } = useGlobal();
 
   const addToPlayList = async () => {
+    setIsAddingToPlaylist(true);
     try {
       const playlist = videos.map((video) => ({
         title: video.snippet.title,
@@ -22,12 +25,14 @@ function Youtube() {
       // Add the playlist array as a single document to the "playlist" collection
       await addDoc(collection(db, "playlist"), { videos: playlist });
 
+      setPlaylistCreated(true);
       console.log("Playlist added to Firestore successfully!");
     } catch (error) {
       console.error("Error adding playlist to Firestore:", error);
+    } finally {
+      setIsAddingToPlaylist(false);
     }
   };
-
 
   const searchYouTube = async (query) => {
     try {
@@ -115,11 +120,23 @@ function Youtube() {
       {videos.length > 0 && (
         <div className="w-full flex items-center justify-center">
           <button
-            className="ml-4 mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+            className={`ml-4 mt-4 px-4 py-2 font-semibold rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-75 ${
+              isAddingToPlaylist
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600 text-white focus:ring-blue-400"
+            }`}
             onClick={addToPlayList}
+            disabled={isAddingToPlaylist}
           >
             Add songs to playlist
           </button>
+        </div>
+      )}
+      {playlistCreated && (
+        <div className="w-full flex items-center justify-center mt-4">
+          <p className="text-green-500 font-semibold">
+            Playlist created successfully!
+          </p>
         </div>
       )}
       <div className="w-full flex items-center justify-center">
@@ -127,7 +144,7 @@ function Youtube() {
           className="ml-4 mt-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-md shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
           onClick={fetchVideos}
         >
-          Fetch songs from youtube
+          Fetch songs from YouTube
         </button>
       </div>
     </main>
