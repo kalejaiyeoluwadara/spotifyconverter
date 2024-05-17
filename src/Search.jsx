@@ -90,7 +90,8 @@ function Search() {
           value={playlistInput}
           onChange={(e) => setPlaylistInput(e.target.value)}
           type="text"
-          className="py-2 px-3 border sm:w-[60%] w-[90%]  sm:mt-0 mt-20 border-gray-300 rounded-[20px]"
+          
+          className="py-2 px-3 border sm:w-[60%] w-[9'0%] text-black  sm:mt-0 mt-20 border-gray-300 rounded-[20px]"
         />
         <button
           onClick={fetchPlaylist}
