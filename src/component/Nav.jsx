@@ -31,6 +31,18 @@ function Nav() {
       </section>
       <section
         className={`${
+          page === "playlist"
+            ? "text-blue-500 font-[500]  "
+            : "text-black font-[400] cursor-pointer "
+        }`}
+        onClick={() => {
+          setPage("playlist");
+        }}
+      >
+        PlayLists
+      </section>
+      <section
+        className={`${
           page === "login"
             ? "text-blue-500 font-[500]  "
             : "text-black font-[400] cursor-pointer "
