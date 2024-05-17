@@ -14,7 +14,11 @@ const YoutubePlaylistCreator = () => {
 
   const handleLoginSuccess = (response) => {
     console.log("Login Success:", response);
-    setAccessToken(response.access_token);
+    const token = response.credential;
+    // Extract access token from the credential field
+    const accessToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
+    // Set the access token state
+    setAccessToken(accessToken);
   };
 
   const handleLoginFailure = (response) => {
@@ -52,9 +56,7 @@ const YoutubePlaylistCreator = () => {
       const playlistId = response.data.id;
       setPlaylistLink(`https://www.youtube.com/playlist?list=${playlistId}`);
       setIsLoading(false);
-      console.log(
-        `Playlist created: https://www.youtube.com/playlist?list=${playlistId}`
-      );
+      console.log(playlistLink);
     } catch (error) {
       console.error("Error creating playlist:", error);
       setErrorMessage("Failed to create playlist");
