@@ -16,10 +16,17 @@ const YoutubePlaylistCreator = () => {
     console.log("Login Success:", response);
     try {
       const token = response.credential;
-      const parsedToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
+      if (!token) {
+        throw new Error("Access token not found in response");
+      }
+      const parts = token.split(".");
+      if (parts.length < 3) {
+        throw new Error("Invalid access token format");
+      }
+      const parsedToken = JSON.parse(atob(parts[1]));
       const accessToken = parsedToken ? parsedToken.access_token : null;
       if (!accessToken) {
-        throw new Error("Failed to parse access token");
+        throw new Error("Access token not found in parsed token");
       }
       setAccessToken(accessToken);
     } catch (error) {
@@ -27,6 +34,7 @@ const YoutubePlaylistCreator = () => {
       setErrorMessage("Failed to authenticate");
     }
   };
+
 
   const handleLoginFailure = (response) => {
     console.log("Login Failure:", response);
