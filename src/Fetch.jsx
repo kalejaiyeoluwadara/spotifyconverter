@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../src/config/firebase"; // Import the Firestore instance
-import { BsYoutube } from "react-icons/bs";
+
 function Playlist() {
   const [playlists, setPlaylists] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,7 +37,7 @@ function Playlist() {
   }, []);
 
   return (
-    <main className="flex text-white bg-black sm:px-0 px-8 relative w-screen min-h-screen items-start justify-start">
+    <main className="flex text-white bg-black min-h-screen sm:px-0 px-4 relative w-screen  items-start justify-start">
       <div className="h-screen sm:visible invisible sm:block hidden bg-[#121212] mr-4 w-auto shadow-sm px-8 py-8 ">
         <div className="text-lg font-bold mb-6 ">
           <p>Playlists</p>
@@ -64,7 +64,7 @@ function Playlist() {
         ) : errorMessage ? (
           <p>{errorMessage}</p>
         ) : (
-          <div className="mt-8 pb-20">
+          <div className="mt-8   w-full min-h-screen pb-20">
             {playlists.length > 0 ? (
               playlists.map((playlist) => (
                 <div key={playlist.id} className="mb-8 w-full">
@@ -75,22 +75,19 @@ function Playlist() {
                     {playlist.videos.map((video, index) => (
                       <div
                         key={index}
-                        className="flex bg-[#121212] relative overflow-hidden rounded-[20px] flex-col items-center mb-4 pb-4 "
+                        className="flex bg-[#121212] overflow-hidden rounded-[20px] flex-col items-center mb-4 pb-4 "
                       >
                         <img
                           src={video.thumbnailUrl}
                           alt={video.title}
                           className="w-full h-auto mb-2"
                         />
-                        <div className="w-full h-auto absolute top-8 flex items-center justify-center ">
-                          <BsYoutube className="text-red-600" size={40} />
-                        </div>
                         <div className="text-start px-2 ">
                           <h2 className="text-[18px] font-semibold">
                             {video.title}
                           </h2>
                           <button
-                            className="mt-2 text-white font-semibold rounded-md   "
+                            className="mt-2 text-white hover:text-blue-500 transition-all font-semibold rounded-md   "
                             onClick={() =>
                               window.open(
                                 `https://www.youtube.com/watch?v=${video.videoId}`,
