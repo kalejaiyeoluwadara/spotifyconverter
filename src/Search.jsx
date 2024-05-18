@@ -108,7 +108,7 @@ function Search() {
       )}
       {/* Prompt Message */}
       {playlistTracks.length === 0 && !isLoading && !errorMessage && (
-        <div className="w-full sm:h-full h-full sm:mt-0 mt-20 sm:px-0 px-4 flex items-center justify-center text-gray-500">
+        <div className="w-full sm:h-full h-full sm:mt-0 mt-20 sm:px-0 px-4 flex items-center justify-center sm:text-start text-center text-gray-500">
           Please enter a Spotify playlist link to fetch tracks.
         </div>
       )}

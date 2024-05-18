@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useGlobal } from "./context"; // Import the useGlobal hook
-import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { db, auth } from "../src/config/firebase";
-
+import { auth } from "../src/config/firebase";
+import { IoCopyOutline } from "react-icons/io5";
 const CLIENT_ID =
   "587491759521-1cg5rmreu9ds28sups1ddhnkhsu7or1c.apps.googleusercontent.com";
 const API_KEY = "AIzaSyDEmTTY2neJdt5GT6Y378zryQAo_j7EDvQ";
@@ -17,6 +16,13 @@ const YoutubePlaylistCreator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { songs } = useGlobal(); // Access the songs state from useGlobal hook
 
+  useEffect(() => {
+    const storedToken = localStorage.getItem("accessToken");
+    if (storedToken) {
+      setAccessToken(storedToken);
+    }
+  }, []);
+
   const handleLoginSuccess = async () => {
     const provider = new GoogleAuthProvider();
     provider.addScope("https://www.googleapis.com/auth/youtube");
@@ -26,6 +32,7 @@ const YoutubePlaylistCreator = () => {
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential.accessToken;
       setAccessToken(token);
+      localStorage.setItem("accessToken", token);
       console.log("Access Token:", token);
     } catch (error) {
       console.error("Login Failure:", error);
@@ -148,15 +155,23 @@ const YoutubePlaylistCreator = () => {
   };
 
   const fetchVideos = async () => {
-    const limitedSongs = songs.slice(0, 3); // Get the first 3 songs
-    const songTitles = limitedSongs.map((song) => song.name);
+    const songTitles = songs.map((song) => song.name);
     await createPlaylist("My Playlist", songTitles);
+  };
+
+  const copyToClipboard = () => {
+    if (playlistLink) {
+      navigator.clipboard.writeText(playlistLink);
+      alert("Playlist link copied to clipboard!");
+    }
   };
 
   return (
     <GoogleOAuthProvider clientId={CLIENT_ID}>
-      <div className="flex flex-col bg-black text-white items-center justify-center h-screen">
-        <button onClick={handleLoginSuccess}>Login with Google</button>
+      <div className="flex flex-col bg-black text-white relative items-center justify-center h-screen">
+        {!accessToken && (
+          <button onClick={handleLoginSuccess}>Login with Google</button>
+        )}
         {isLoading && <p>Loading...</p>}
         <button
           onClick={fetchVideos}
@@ -165,11 +180,21 @@ const YoutubePlaylistCreator = () => {
           Create Playlist
         </button>
         {playlistLink && (
-          <div className="mt-4">
-            <p>Playlist Link:</p>
-            <a href={playlistLink} target="_blank" rel="noopener noreferrer">
+          <div className="mt-4 w-full absolute bottom-[100px] flex items-center justify-center">
+            <p className="bg-white px-2 py-2 mr-1 text-black rounded-md">
+              Playlist Link:
+            </p>
+            <a
+              href={playlistLink}
+              className="text-blue-500"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {playlistLink}
             </a>
+            <div className="cursor-pointer" onClick={copyToClipboard}>
+              <IoCopyOutline className="text-white ml-4" size={20} />
+            </div>
           </div>
         )}
         {errorMessage && <p className="text-red-500 mt-4">{errorMessage}</p>}
