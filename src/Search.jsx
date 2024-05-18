@@ -90,8 +90,7 @@ function Search() {
           value={playlistInput}
           onChange={(e) => setPlaylistInput(e.target.value)}
           type="text"
-          
-          className="py-2 px-3 border sm:w-[60%] w-[9'0%] text-black  sm:mt-0 mt-20 border-gray-300 rounded-[20px]"
+          className="py-2 px-3 border sm:w-[60%] w-[90%] text-black  sm:mt-0 mt-20 border-gray-300 rounded-[20px]"
         />
         <button
           onClick={fetchPlaylist}
@@ -103,13 +102,13 @@ function Search() {
       </div>
       {/* Error Message */}
       {errorMessage && (
-        <div className="w-full sm:px-0 px-4 sm:h-full h-full flex items-center justify-center text-red-500">
+        <div className="w-full sm:px-0 sm:mt-0 mt-20  px-4 sm:h-full h-screen flex items-center justify-center text-red-500">
           {errorMessage}
         </div>
       )}
       {/* Prompt Message */}
       {playlistTracks.length === 0 && !isLoading && !errorMessage && (
-        <div className="w-full sm:h-full h-full sm:px-0 px-4 flex items-center justify-center text-gray-500">
+        <div className="w-full sm:h-full h-full sm:mt-0 mt-20 sm:px-0 px-4 flex items-center justify-center text-gray-500">
           Please enter a Spotify playlist link to fetch tracks.
         </div>
       )}

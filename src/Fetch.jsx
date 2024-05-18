@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../src/config/firebase"; // Import the Firestore instance
-
+import { BsYoutube } from "react-icons/bs";
 function Playlist() {
   const [playlists, setPlaylists] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -75,13 +75,16 @@ function Playlist() {
                     {playlist.videos.map((video, index) => (
                       <div
                         key={index}
-                        className="flex bg-[#121212] overflow-hidden rounded-[20px] flex-col items-center mb-4 pb-4 "
+                        className="flex bg-[#121212] relative overflow-hidden rounded-[20px] flex-col items-center mb-4 pb-4 "
                       >
                         <img
                           src={video.thumbnailUrl}
                           alt={video.title}
                           className="w-full h-auto mb-2"
                         />
+                        <div className="w-full h-auto absolute top-8 flex items-center justify-center ">
+                          <BsYoutube className="text-red-600" size={40} />
+                        </div>
                         <div className="text-start px-2 ">
                           <h2 className="text-[18px] font-semibold">
                             {video.title}
