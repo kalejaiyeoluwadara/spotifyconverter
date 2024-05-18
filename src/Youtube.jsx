@@ -62,16 +62,17 @@ function Youtube() {
     }
   };
 
- const fetchVideos = async () => {
-   for (const song of songs) {
-     console.log("Searching for song:", song.name);
-     await searchYouTube(song.name);
-     if (errorMessage) {
-       console.log("Error message encountered:", errorMessage);
+   const fetchVideos = async () => {
+     const limitedSongs = songs.slice(0, 15); // Get the first 10 songs
+     for (const song of limitedSongs) {
+       console.log("Searching for song:", song.name);
+       await searchYouTube(song.name);
+       if (errorMessage) {
+         console.log("Error message encountered:", errorMessage);
+       }
      }
-   }
-   console.log(videos);
- };
+     console.log(videos);
+   };
 
   const handleVisitButtonClick = (videoId) => {
     window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank");
