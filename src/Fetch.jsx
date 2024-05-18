@@ -37,7 +37,7 @@ function Playlist() {
   }, []);
 
   return (
-    <main className="flex text-white bg-black sm:px-0 px-8 relative w-screen  items-start justify-start">
+    <main className="flex text-white bg-black sm:px-0 px-8 relative w-screen min-h-screen items-start justify-start">
       <div className="h-screen sm:visible invisible sm:block hidden bg-[#121212] mr-4 w-auto shadow-sm px-8 py-8 ">
         <div className="text-lg font-bold mb-6 ">
           <p>Playlists</p>
@@ -58,7 +58,7 @@ function Playlist() {
           })}
         </div>
       </div>
-      <div className="w-full h-screen overflow-y-scroll flex items-center justify-center">
+      <div className="w-full min-h-screen flex items-center justify-center">
         {isLoading ? (
           <p>Loading...</p>
         ) : errorMessage ? (

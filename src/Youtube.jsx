@@ -79,7 +79,7 @@ function Youtube() {
   };
 
   return (
-    <main className="flex flex-col-reverse w-screen min-h-screen bg-black relative overflow-hidden items-center justify-center">
+    <main className="flex flex-col w-screen min-h-screen bg-black text-white relative overflow-hidden items-center justify-center">
       <div className="flex flex-col items-center justify-start w-full h-auto">
         {isLoading ? (
           <p>Loading...</p>
@@ -96,29 +96,29 @@ function Youtube() {
                     className="w-48 h-auto mr-4"
                   />
                   <div>
-                    <h2 className="text-lg font-semibold">
+                    <h2 className="text-lg text-white font-semibold">
                       {video.snippet.title}
                     </h2>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-white ">
                       {video.snippet.description}
                     </p>
                     <button
-                      className="mt-2 px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                      className="mt-2 px-4 py-2 hover:text-blue-500 transition-all text-white font-semibold"
                       onClick={() => handleVisitButtonClick(video.id.videoId)}
                     >
-                      Visit
+                      {'Visit >'}
                     </button>
                   </div>
                 </div>
               ))
             ) : (
-              <p>No videos found yet.</p>
+              <p className="text-white" >No videos found yet.</p>
             )}
           </div>
         )}
       </div>
       {videos.length > 0 && (
-        <div className="w-full flex items-center justify-center">
+        <div className="w-full fixed right-0 bottom-20 z-50 flex items-center sm:pr-20 justify-end">
           <button
             className={`ml-4 mt-4 px-4 py-2 font-semibold rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-75 ${
               isAddingToPlaylist
@@ -133,7 +133,7 @@ function Youtube() {
         </div>
       )}
       {playlistCreated && (
-        <div className="w-full flex items-center justify-center mt-4">
+        <div className="w-full flex items-center text-white justify-center mt-4">
           <p className="text-green-500 font-semibold">
             Playlist created successfully!
           </p>

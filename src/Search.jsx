@@ -83,7 +83,7 @@ function Search() {
   };
 
   return (
-    <main className="flex h-screen bg-black text-white flex-col w-screen justify-start">
+    <main className="flex min-h-screen bg-black text-white flex-col w-screen justify-start">
       <div className="w-full sm:px-0 px-4  flex sm:flex-row flex-col items-center py-8 h-[100px] justify-center">
         <input
           placeholder="Enter playlist link"
@@ -118,7 +118,7 @@ function Search() {
         {playlistTracks.map(({ track }) => (
           <div
             key={track.id}
-            className="card w-full flex items-center justify-start h-[80px] bg-white shadow-md rounded-md m-2 sm:p-4 p-1 "
+            className="card w-full transition-all hover:scale-105 flex items-center justify-start h-[80px] bg-gray-900 shadow-md rounded-md m-2 sm:p-4 p-1 "
           >
             <img
               src={track.album.images[0]?.url}
@@ -129,7 +129,7 @@ function Search() {
               <p className="title font-[500] w-full overflow-hidden h-full  text-[12px] sm:text-[16px]">
                 {track.name}
               </p>
-              <p className="text-gray-500  text-[14px]">
+              <p className="text-gray-300  text-[14px]">
                 {track.artists.map((artist) => artist.name).join(", ")}
               </p>
             </div>

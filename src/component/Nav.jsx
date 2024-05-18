@@ -4,7 +4,7 @@ import { useGlobal } from '../context'
 function Nav() {
     const {spotify,setSpotify,setPage,page} = useGlobal()
   return (
-    <div className="flex w-screen  gap-8 h-[60px] bg-[#121212] fixed z-50 bottom-0 left-0 rounded-md shadow-sm items-center justify-center ">
+    <div className="flex w-screen  gap-8 h-[60px] bg-[#121212] fixed z-40 bottom-0 left-0  items-center justify-center ">
       <section
         className={`${
           page === "spotify"
