@@ -63,7 +63,7 @@ function Youtube() {
   };
 
    const fetchVideos = async () => {
-     const limitedSongs = songs.slice(0, 15); // Get the first 10 songs
+     const limitedSongs = songs.slice(0, 15); // Get the first 15 songs
      for (const song of limitedSongs) {
        console.log("Searching for song:", song.name);
        await searchYouTube(song.name);
