@@ -5,6 +5,7 @@ import { useGlobal } from "./context"; // Import the useGlobal hook
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../src/config/firebase";
 import { IoCopyOutline } from "react-icons/io5";
+
 const CLIENT_ID =
   "587491759521-1cg5rmreu9ds28sups1ddhnkhsu7or1c.apps.googleusercontent.com";
 const API_KEY = "AIzaSyDEmTTY2neJdt5GT6Y378zryQAo_j7EDvQ";
@@ -35,8 +36,13 @@ const YoutubePlaylistCreator = () => {
       localStorage.setItem("accessToken", token);
       console.log("Access Token:", token);
     } catch (error) {
-      console.error("Login Failure:", error);
-      setErrorMessage("Failed to authenticate");
+      if (error.code === "auth/popup-closed-by-user") {
+        console.error("The authentication popup was closed before completion.");
+        setErrorMessage("Authentication was canceled. Please try again.");
+      } else {
+        console.error("Login Failure:", error);
+        setErrorMessage("Failed to authenticate");
+      }
     }
   };
 
@@ -155,7 +161,7 @@ const YoutubePlaylistCreator = () => {
   };
 
   const fetchVideos = async () => {
-    const songTitles = songs.map((song) => song.name);
+    const songTitles = songs.map((song) => song.name).slice(0, 15); // Limit to first 15 songs
     await createPlaylist("My Playlist", songTitles);
   };
 
