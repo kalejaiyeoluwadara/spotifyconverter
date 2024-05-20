@@ -62,17 +62,17 @@ function Youtube() {
     }
   };
 
-   const fetchVideos = async () => {
-     const limitedSongs = songs.slice(0, 15); // Get the first 15 songs
-     for (const song of limitedSongs) {
-       console.log("Searching for song:", song.name);
-       await searchYouTube(song.name);
-       if (errorMessage) {
-         console.log("Error message encountered:", errorMessage);
-       }
-     }
-     console.log(videos);
-   };
+  const fetchVideos = async () => {
+    const limitedSongs = songs.slice(0, 2); // Get the first 15 songs
+    for (const song of limitedSongs) {
+      console.log("Searching for song:", song.name);
+      await searchYouTube(song.name);
+      if (errorMessage) {
+        console.log("Error message encountered:", errorMessage);
+      }
+    }
+    console.log(videos);
+  };
 
   const handleVisitButtonClick = (videoId) => {
     window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank");
@@ -106,13 +106,13 @@ function Youtube() {
                       className="mt-2 px-4 py-2 hover:text-blue-500 transition-all text-white font-semibold"
                       onClick={() => handleVisitButtonClick(video.id.videoId)}
                     >
-                      {'Visit >'}
+                      {"Visit >"}
                     </button>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-white" >No videos found yet.</p>
+              <p className="text-white">No videos found yet.</p>
             )}
           </div>
         )}
@@ -139,14 +139,16 @@ function Youtube() {
           </p>
         </div>
       )}
-     { videos.length < 1 && <div className="w-full h-full fixed bottom-20 z-50 flex items-center justify-center">
-        <button
-          className="ml-4 mt-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-md shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
-          onClick={fetchVideos}
-        >
-          Fetch songs from YouTube
-        </button>
-      </div>}
+      {videos.length < 1 && (
+        <div className="w-full h-full fixed bottom-20 z-50 flex items-center justify-center">
+          <button
+            className="ml-4 mt-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-md shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+            onClick={fetchVideos}
+          >
+            Fetch songs from YouTube
+          </button>
+        </div>
+      )}
     </main>
   );
 }
