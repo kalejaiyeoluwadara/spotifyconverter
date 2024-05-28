@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useGlobal } from "./context"; // Import the useGlobal hook
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
 import { auth } from "../src/config/firebase";
 import { IoCopyOutline } from "react-icons/io5";
 
@@ -46,10 +51,23 @@ const YoutubePlaylistCreator = () => {
     }
   };
 
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        setAccessToken(null);
+        localStorage.removeItem("accessToken");
+        console.log("Logged out successfully");
+      })
+      .catch((error) => {
+        console.error("Logout Failure:", error);
+        setErrorMessage("Failed to log out");
+      });
+  };
+
   const createPlaylist = async (title, songTitles) => {
     if (!accessToken) {
-      setErrorMessage("No access token available");
-      console.error("No access token available");
+      setErrorMessage("No access token available, Login");
+      console.error("No access token available, Login");
       return;
     }
 
@@ -175,8 +193,20 @@ const YoutubePlaylistCreator = () => {
   return (
     <GoogleOAuthProvider clientId={CLIENT_ID}>
       <div className="flex flex-col bg-black text-white relative items-center justify-center h-screen">
-        {!accessToken && (
-          <button onClick={handleLoginSuccess}>Login with Google</button>
+        {accessToken ? (
+          <button
+            onClick={handleLogout}
+            className="absolute top-4 right-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-md shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+          >
+            Logout
+          </button>
+        ) : (
+          <button
+            onClick={handleLoginSuccess}
+            className="absolute top-4 right-4 px-4 py-2 bg-green-500 text-white font-semibold rounded-md shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
+          >
+            Login with Google
+          </button>
         )}
         {isLoading && <p>Loading...</p>}
         <button
@@ -186,13 +216,13 @@ const YoutubePlaylistCreator = () => {
           Create Playlist
         </button>
         {playlistLink && (
-          <div className="mt-4 w-full absolute bottom-[100px] flex items-center justify-center">
+          <div className="mt-4 w-full absolute bottom-[100px] flex  items-center justify-center">
             <p className="bg-white px-2 py-2 mr-1 text-black rounded-md">
               Playlist Link:
             </p>
             <a
               href={playlistLink}
-              className="text-blue-500"
+              className="text-blue-500 sm:w-auto w-[100px] overflow-hidden "
               target="_blank"
               rel="noopener noreferrer"
             >

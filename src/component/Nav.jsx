@@ -1,8 +1,8 @@
-import React from 'react'
-import { useGlobal } from '../context'
+import React from "react";
+import { useGlobal } from "../context";
 
 function Nav() {
-    const {spotify,setSpotify,setPage,page} = useGlobal()
+  const { spotify, setSpotify, setPage, page } = useGlobal();
   return (
     <div className="flex w-screen  gap-8 h-[60px] bg-[#121212] fixed z-40 bottom-0 left-0  items-center justify-center ">
       <section
@@ -17,7 +17,7 @@ function Nav() {
       >
         Spotify
       </section>
-      <section
+      {/* <section
         className={`${
           page === "youtube"
             ? "text-red-500 font-[500]  "
@@ -28,7 +28,7 @@ function Nav() {
         }}
       >
         Youtube
-      </section>
+      </section> */}
       <section
         className={`${
           page === "login"
@@ -41,7 +41,7 @@ function Nav() {
       >
         Create
       </section>
-      <section
+      {/* <section
         className={`${
           page === "playlist"
             ? "text-blue-500 font-[500]  "
@@ -52,9 +52,9 @@ function Nav() {
         }}
       >
         PlayLists
-      </section>
+      </section> */}
     </div>
   );
 }
 
-export default Nav
+export default Nav;
