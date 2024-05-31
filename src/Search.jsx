@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useGlobal } from "./context";
+// Spotify credentials
 const CLIENT_ID = "21fa13dee5a54da78be93d4db02485b7";
 const CLIENT_SECRET = "804c5ddb54084b66817823648dd78cf7";
 
@@ -10,7 +11,7 @@ function Search() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { songs, setSongs } = useGlobal();
-
+  // Once page loads an access token is generated
   useEffect(() => {
     const authParameters = {
       method: "POST",
@@ -30,7 +31,7 @@ function Search() {
         setErrorMessage("Failed to fetch access token.");
       });
   }, []);
-
+  // Function to songs in youtube playlist
   const fetchPlaylist = () => {
     setIsLoading(true);
     setErrorMessage("");
@@ -68,10 +69,11 @@ function Search() {
           });
         });
 
-        // Update songs state with unique new songs
-        setSongs((prevSongs) => [...prevSongs, ...uniqueNewSongs]);
+        // Replace songs state with unique new songs
+        setSongs((prevSongs) => [...uniqueNewSongs]);
         setPlaylistTracks(data.items);
         setIsLoading(false);
+        setErrorMessage("");
       })
       .catch((error) => {
         console.error("Error fetching playlist:", error);

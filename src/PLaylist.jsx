@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useGlobal } from "./context"; // Import the useGlobal hook
+import { useGlobal } from "./context"; // Import the useGlobal hook to access stored
 import {
   getAuth,
   GoogleAuthProvider,
@@ -10,10 +10,15 @@ import {
 } from "firebase/auth";
 import { auth } from "../src/config/firebase";
 import { IoCopyOutline } from "react-icons/io5";
-
+// API details
 const CLIENT_ID =
   "587491759521-1cg5rmreu9ds28sups1ddhnkhsu7or1c.apps.googleusercontent.com";
 const API_KEY = "AIzaSyDEmTTY2neJdt5GT6Y378zryQAo_j7EDvQ";
+
+// Three main functions going on on the backend
+// 1. Fetch videos in the songs array from the spotify playlist (search for all the songs on youtube)
+// 2. If song exists add the song to the playlist
+// 3. Generate ID for playlist and render the playlist link to user
 
 const YoutubePlaylistCreator = () => {
   const [accessToken, setAccessToken] = useState(null);
@@ -27,8 +32,9 @@ const YoutubePlaylistCreator = () => {
     if (storedToken) {
       setAccessToken(storedToken);
     }
+    console.log(songs);
   }, []);
-
+  // Function to handle login
   const handleLoginSuccess = async () => {
     const provider = new GoogleAuthProvider();
     provider.addScope("https://www.googleapis.com/auth/youtube");
@@ -50,7 +56,7 @@ const YoutubePlaylistCreator = () => {
       }
     }
   };
-
+  // Function for logout
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -63,7 +69,7 @@ const YoutubePlaylistCreator = () => {
         setErrorMessage("Failed to log out");
       });
   };
-
+  // Function to createPlaylist
   const createPlaylist = async (title, songTitles) => {
     if (!accessToken) {
       setErrorMessage("No access token available, Login");
@@ -115,7 +121,7 @@ const YoutubePlaylistCreator = () => {
       setIsLoading(false);
     }
   };
-
+  // Function to search the videos on youtube
   const searchYouTubeVideos = async (songTitles) => {
     const videoIds = [];
     for (const title of songTitles) {
@@ -143,7 +149,7 @@ const YoutubePlaylistCreator = () => {
     }
     return videoIds;
   };
-
+  // Function to add videos to playlist
   const addVideosToPlaylist = async (playlistId, videoIds) => {
     for (const videoId of videoIds) {
       try {
@@ -177,12 +183,13 @@ const YoutubePlaylistCreator = () => {
       }
     }
   };
-
+  // Function to fetch videos from youtube API
   const fetchVideos = async () => {
-    const songTitles = songs.map((song) => song.name).slice(0, 15); // Limit to first 15 songs
+    const songTitles = songs.map((song) => song.name).slice(0, 20); // Limit to first 20 songs
     await createPlaylist("My Playlist", songTitles);
   };
 
+  //Function to copy generated playlist link to clipboard
   const copyToClipboard = () => {
     if (playlistLink) {
       navigator.clipboard.writeText(playlistLink);
@@ -190,9 +197,12 @@ const YoutubePlaylistCreator = () => {
     }
   };
 
+  // Main view for
   return (
+    // Wrapped in GoogOAuthProvider for login and signIn functionality
     <GoogleOAuthProvider clientId={CLIENT_ID}>
       <div className="flex flex-col bg-black text-white relative items-center justify-center h-screen">
+        {/* If access token is available Logout button and Login button are rendered, else they are not, if user is already logged in Logout button is rendered  */}
         {accessToken ? (
           <button
             onClick={handleLogout}
@@ -208,13 +218,17 @@ const YoutubePlaylistCreator = () => {
             Login with Google
           </button>
         )}
+        {/* While loading loading text is displayed */}
         {isLoading && <p>Loading...</p>}
+
+        {/* Create Playlist button */}
         <button
           onClick={fetchVideos}
           className="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
         >
           Create Playlist
         </button>
+        {/* if playlist link has been generated it is displayed */}
         {playlistLink && (
           <div className="mt-4 w-full absolute bottom-[100px] flex  items-center justify-center">
             <p className="bg-white px-2 py-2 mr-1 text-black rounded-md">
@@ -233,6 +247,7 @@ const YoutubePlaylistCreator = () => {
             </div>
           </div>
         )}
+        {/* If error, error messages is displayed */}
         {errorMessage && <p className="text-red-500 mt-4">{errorMessage}</p>}
       </div>
     </GoogleOAuthProvider>
