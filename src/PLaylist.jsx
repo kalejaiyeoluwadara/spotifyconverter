@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../src/config/firebase";
 import { IoCopyOutline } from "react-icons/io5";
+import Limit from "./component/Modal";
 // API details
 const CLIENT_ID =
   "587491759521-1cg5rmreu9ds28sups1ddhnkhsu7or1c.apps.googleusercontent.com";
@@ -25,14 +26,13 @@ const YoutubePlaylistCreator = () => {
   const [playlistLink, setPlaylistLink] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { songs } = useGlobal(); // Access the songs state from useGlobal hook
+  const { songs, limit, setLimit, modal, setModal } = useGlobal(); // Access the songs state from useGlobal hook
 
   useEffect(() => {
     const storedToken = localStorage.getItem("accessToken");
     if (storedToken) {
       setAccessToken(storedToken);
     }
-    console.log(songs);
   }, []);
   // Function to handle login
   const handleLoginSuccess = async () => {
@@ -185,7 +185,7 @@ const YoutubePlaylistCreator = () => {
   };
   // Function to fetch videos from youtube API
   const fetchVideos = async () => {
-    const songTitles = songs.map((song) => song.name).slice(0, 20); // Limit to first 20 songs
+    const songTitles = songs.map((song) => song.name).slice(0, parseInt(limit)); //limit to limit state range
     await createPlaylist("My Playlist", songTitles);
   };
 
@@ -202,6 +202,16 @@ const YoutubePlaylistCreator = () => {
     // Wrapped in GoogOAuthProvider for login and signIn functionality
     <GoogleOAuthProvider clientId={CLIENT_ID}>
       <div className="flex flex-col bg-black text-white relative items-center justify-center h-screen">
+        <button
+          onClick={() => {
+            setModal(!modal);
+          }}
+          className="absolute left-3 top-4 "
+        >
+          limit
+        </button>
+        <Limit />
+
         {/* If access token is available Logout button and Login button are rendered, else they are not, if user is already logged in Logout button is rendered  */}
         {accessToken ? (
           <button

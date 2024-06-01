@@ -7,15 +7,16 @@ import { useGlobal } from "./context";
 import Nav from "./component/Nav";
 import YoutubePlaylistCreator from "./PLaylist";
 import Playlist from "./Fetch";
+import Limit from "./component/Modal";
 
 const App = () => {
-  const {spotify,setSpotify,page} = useGlobal()
+  const { spotify, setSpotify, page, modal, setModal } = useGlobal();
   return (
     <main className="relative overflow-x-hidden ">
       {page === "spotify" && <Search />}
       {page === "youtube" && <Youtube />}
       {page === "login" && <YoutubePlaylistCreator />}
-      {page === "playlist" && <Playlist/>}
+      {page === "playlist" && <Playlist />}
       <Nav />
     </main>
   );
